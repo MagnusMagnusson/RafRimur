@@ -17,16 +17,16 @@ def printList(list):
 	print(txt)
 def betterLower(word):
 	word = word.lower()
-	word = word.replace('é','É')
-	word = word.replace('ı','İ')
-	word = word.replace('ú','Ú')
-	word = word.replace('í','Í')
-	word = word.replace('ğ','Ğ')
-	word = word.replace('™','”')
-	word = word.replace('','•')
-	word = word.replace('’','‘')
-	word = word.replace('‹','Œ')
-	word = word.replace('¤',' ')
+	word = word.replace('É','é')
+	word = word.replace('İ','ı')
+	word = word.replace('Ú','ú')
+	word = word.replace('Í','í')
+	word = word.replace('Ğ','ğ')
+	word = word.replace('Ö','ö')
+	word = word.replace('Á','á')
+	word = word.replace('Æ','æ')
+	word = word.replace('Ş','ş')
+	word = word.replace('Ó','ó')
 	return word
 
 class poet(object):
@@ -48,7 +48,7 @@ class poet(object):
 		self.markov.add(F.read())
 		F.close()
 	def is_written_rhyme(self,word1,word2):
-		vowels = "eyuioa‚˜£¡¢‘” —§¥¦’™¤!?"
+		vowels = "eyuioaöéıúíóáæ"
 		#! = ey/ei, ? = au
 		forbidden = "/.!?,-:;/"
 		vowelList = []
@@ -62,12 +62,8 @@ class poet(object):
 		if(not self.selfRhymeAllowed):
 			if(word1 == word2):
 				return False
-		word1 = word1.replace("ei","!")
-		word1 = word1.replace("ey","!")
-		word1 = word1.replace("au","?")
-		word2 = word2.replace("ei","!")
-		word2 = word2.replace("ey","!")
-		word2 = word2.replace("au","?")
+		word1 = word1.replace("ei","!").replace("ey","!").replace("au","?")
+		word2 = word2.replace("ei","!").replace("ey","!").replace("au","?")
 		if(len(word1) < len(word2)):
 			lead = word1
 			follow = word2
@@ -88,7 +84,7 @@ class poet(object):
 		ending = lead[firstVowel:]
 		return follow.endswith(ending)
 	def syllables(self,word):
-		vowels = "eyuioa‚˜£¡¢‘” —§¥¦’™¤"
+		vowels = "eyuioaöéıúíóáæ"
 		c = 0
 		for i in word:
 			if i in vowels:
@@ -98,7 +94,7 @@ class poet(object):
 		c -= word.count("ei")
 		return c
 	def load_settings(self):
-		F = open("settings.txt",'r')
+		F = open("stillingar.txt",'r')
 		for line in F:
 			M.set_setting(line)
 		F.close()
@@ -107,40 +103,38 @@ class poet(object):
 		if len(setting) <= 1:
 			return
 		
-		if setting[0] == "syllables":
+		if setting[0] == "Atkvæği":
 			self.sylPattern = []
 			for num in setting[1].split():
 				self.sylPattern.append(int(num))
-		elif setting[0] == "rhymes":
+		elif setting[0] == "Rím":
 			self.rhymePattern = []
 			for num in setting[1].split():
 				self.rhymePattern.append(int(num))
-		elif setting[0] == "minVowelRhyme":
-			self.minimumRhymeVowels = int(setting[1])
-		elif setting[0] == "minorThreshold":
+		elif setting[0] == "MinniMörk":
 			self.minorThreshold = float(setting[1])
-		elif setting[0] == "relatedThreshold":
+		elif setting[0] == "TengdMörk":
 			self.relatedThreshold = float(setting[1])
-		elif setting[0] == "interchangeableThreshold":
+		elif setting[0] == "ÚtskiptalegMörk":
 			self.interchangeableThreshold = float(setting[1])
-		elif setting[0] == "minVowelRhyme":
+		elif setting[0] == "LámarksAtkvæğaRím":
 			self.minimumRhymeVowels = int(setting[1])
-		elif setting[0] == "selfRhymesAllowed":
-			if setting[1] == 'true':
+		elif setting[0] == "SjálfRímLeyft":
+			if setting[1] == 'rétt':
 				self.selfRhymeAllowed = True 
-			elif setting[1] == 'false':
+			elif setting[1] == 'rangt':
 				self.selfRhymeAllowed = False 
 		else:
-			eprint("invalid setting  " + str(setting[0]))
+			eprint("stilling ógild  " + str(setting[0]))
 	def generate(self,length):
 		tries = 5
 		list = self.markov.generate(length,self,tries)
 		while(len(list) != length and tries > 0):
-			eprint("I hit a writer block and scrapped the poem: [" + str(tries) + " attempts left]")
+			eprint("Ég fékk ritstíflu og hætti viğ ljóğiğ: [" + str(tries) + " tilraunir eftir]")
 			list = self.markov.generate(length,self,tries)
 			tries-=1
 		if(len(list) < length):
-			eprint("Could not create poem with these parameters this time, sorry. :(")
+			eprint("Gat ekki ort ljóğ meğ şessum stillingum şetta sinn. Fyrirgefğu.")
 			return
 		poem = ""
 		line = 0
@@ -151,7 +145,7 @@ class poet(object):
 				poem += "\n"
 				line = 0
 		if(self.Debug or self.Status):
-			print("------ POEM GENERATION FINISHED ----- \n \n")
+			print("------ LJÓĞSKÖPUN LOKIĞ ----- \n \n")
 		return poem
 	def filterChoice(self,poem,newline,candidates):
 		#SYLLABLE COUNT
@@ -218,17 +212,17 @@ class Markov(object):
 		self.relatedWords = {}
 		self.P = P
 	def add(self,text):
-		eprint("Analysing text...")
+		eprint("Greini texta...")
 		split = text.split()
 		minorSplit = text.split("\n\n")
 		if(len(minorSplit) > 10):
 			self.addMinor(minorSplit)
 		if(len(split) == 0):
 			return 
-		eprint("Minor words identified")
+		eprint("smáorğ greind")
 		self.addRelated(minorSplit)
 		last = betterLower(split[0])
-		eprint("related words identified")
+		eprint("skyld orğ fundin")
 		first = True
 		for i in split:
 			if(first):
@@ -243,8 +237,8 @@ class Markov(object):
 			self.map[last].append(betterLower(i))
 			last = betterLower(i)
 		
-		eprint("Markov chain built.")
-		eprint("Analysis done.")
+		eprint("Markov keğja sköpuğ.")
+		eprint("Greiningu lokiğ.")
 	def generate(self,length,poet,T):
 		timer = time.clock()
 		T = 40
@@ -257,7 +251,7 @@ class Markov(object):
 				i = 0
 				poem = []
 			if(poet.Debug or poet.Status):
-				print("-Starting line " + str(i+1) + ", in verse " + str(1+(i / (len(poet.sylPattern)))))
+				print("-Hef línu " + str(i+1) + ", í erindi " + str(1+(i / (len(poet.sylPattern)))))
 			valid = False
 			LLast = last
 			tries = 0
@@ -265,20 +259,20 @@ class Markov(object):
 			add = True
 			while(not valid and timer + T >= time.clock()):
 				if(poet.Debug):
-					print("		*-STARTING NEW WORD IN LINE " + str(i))
+					print("		*-Hef nıtt ljóğ í línu " + str(i))
 				if last in self.map.keys():
 					now = self.map[last]
 				else:
 					now = self.map.keys()
 				
 				if(poet.Debug):
-					print("I WANT TO ADD : " + str(now))
+					print("Ég vill bæta viğ : " + str(now))
 				now = poet.filterChoice(poem,text,now)
 				if(poet.Debug):
-					print("VALD WORDS : " + str(now))
+					print("Gild orğ : " + str(now))
 				if(len(now) == 0):
 					if(poet.Debug):
-						print("NO GOOD WORDS! D:")
+						print("Engin góğ orğ fundust")
 					text = ""
 					last = LLast
 					tries += 1
@@ -297,40 +291,40 @@ class Markov(object):
 				else:
 					word = random.choice(now)
 					if(poet.Debug):
-						print("ADDING WORD: " + word)
+						print("Bæti viğ orği : " + word)
 					text += str(word) + " "
 					last = word
 					if(poet.Debug):
-						print("LINE CURRENTLY IS  " + text)
+						print("Núverandi lína er  " + text)
 					if poet.syllables(text) >= poet.sylPattern[(len(poem))%len(poet.sylPattern)]:
 						valid = True
 						if(poet.Debug):
-							print("LINE OVER:  " + text)
+							print("Línu lokiğ:  " + text)
 					if(len(word) == 0):
-						return ["ERROR:NONWORD"]
+						return ["Villa: Engin orğ gild"]
 					
 					if(poet.Debug):
-						print("CURRENT SYLLABLES LEFT TO ADD : " + str(poet.sylPattern[(len(poem))%len(poet.sylPattern)] - poet.syllables(text)))
+						print("Atkvæği enn ósamin : " + str(poet.sylPattern[(len(poem))%len(poet.sylPattern)] - poet.syllables(text)))
 						print(poet.syllables(text) , str(poet.sylPattern[(len(poem))%len(poet.sylPattern)]))
 						
 			if(add):
 				poem.append(text)
 				if(poet.Status):
-					print("Line completed, starting next line.")
+					print("Línu lokiğ, hef næstu línu.")
 				if(poet.Debug):
-					print("POEM IS CURRENTLY  " + str(poem))
+					print("Núverandi ljóğ er " + str(poem))
 			else:
 				if(poet.Status):
-					print("Failed to author line, restarting last line.")
+					print("Ekki tókst ağ semja línu, byrja aftur frá fyrri línu.")
 				if(poet.Debug):
-					print("GOING BACK")
-					print("POEM IS CURRENTLY  " + str(poem))
+					print("Bakka")
+					print("Núverandi ljóğ er  " + str(poem))
 				i-=3
 				T-=1
 				if(T < 0):
-					return ["CANNOT WRITE POEM"]
+					return ["Get ekki skrifağ ljóğ"]
 		if(timer + 4 <= time.clock()):
-			return ["TIME OUT"]
+			return ["Tími upprunninn"]
 		return poem
 	def addMinor(self,verses):
 		PoemCount = len(verses)
@@ -374,17 +368,18 @@ class Markov(object):
 		return word
 		
 
+eprint("Velkomin. Rafrímur virkur.")
 M = poet()
 M.load_settings()
 M.add_file(argv[1])
 
 while(True):
 	eprint("\n")
-	eprint("type in a command.")
+	eprint("Sláiğ inn skipun.")
 	comm = raw_input('').split()
 	if(len(comm) == 0):
 		continue
-	if comm[0] == "generate":
+	if comm[0] == "yrkja":
 		if(len(comm) > 1):
 			if(len(comm) == 2):
 				print("1.")
@@ -394,15 +389,15 @@ while(True):
 				if(len(comm) == 3):
 					T = int(comm[2])
 					while T > 0:
-						eprint("Writing poem #" + str((int(comm[2]) - T) + 1) )
+						eprint("yrki ljóğ #" + str((int(comm[2]) - T) + 1) )
 						print(str((int(comm[2]) - T) + 1) + ".")
 						print(M.generate(int(comm[1])))
 						sys.stdout.flush()
 						print('\n')
 						T-=1
-	elif comm[0] == "settings":
+	elif comm[0] == "stillingar":
 		if(len(comm) > 1):
-			if(comm[1] == "get"):
+			if(comm[1] == "sækja"):
 				M.load_settings()
-	elif comm[0] == "quit":
+	elif comm[0] == "hætta":
 		break

@@ -1,0 +1,6 @@
+Atkvæði:8 6 8 6 8 6
+Rím:1 1 2 2 1 1
+LámarksAtkvæðaRím:2
+SjálfRímLeyft:rangt
+MinniMörk:0.5
+TengdMörk:0.2

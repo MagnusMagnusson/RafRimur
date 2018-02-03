@@ -1,6 +1,0 @@
-syllables:8 6 8 6 8 6
-rhymes:1 1 2 2 1 1
-minVowelRhyme:2
-selfRhymesAllowed:false
-minorThreshold:0.5
-relatedThreshold:0.2
