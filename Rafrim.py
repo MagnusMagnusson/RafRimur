@@ -6,8 +6,9 @@ import random
 import time
 from collections import defaultdict
 
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)		
+def eprint(line):
+	line = line.strip()
+	print(line, file=sys.stderr)		
 def printList(list):
 	txt = "["
 	for i in list:
@@ -23,7 +24,7 @@ def betterLower(word):
 	word = word.replace('Í','í')
 	word = word.replace('Ð','ð')
 	word = word.replace('Ö','ö')
-	word = word.replace('Á','á')
+	word = word.replace('Á','á')
 	word = word.replace('Æ','æ')
 	word = word.replace('Þ','þ')
 	word = word.replace('Ó','ó')
@@ -130,7 +131,6 @@ class poet(object):
 		tries = 5
 		list = self.markov.generate(length,self,tries)
 		while(len(list) != length and tries > 0):
-			eprint("Ég fékk ritstíflu og hætti við ljóðið: [" + str(tries) + " tilraunir eftir]")
 			list = self.markov.generate(length,self,tries)
 			tries-=1
 		if(len(list) < length):
@@ -367,7 +367,6 @@ class Markov(object):
 		word = betterLower(word)
 		return word
 		
-
 eprint("Velkomin. Rafrímur virkur.")
 M = poet()
 M.load_settings()
