@@ -1,4 +1,67 @@
-# RafRimur
+# RafRímur (Is)
+Forrit til að semja Íslensk ljóð, skrifað í Python.
+
+Rafrímur er python skrá sem ég hef verið að vinna að í dálítinn tíma í tilraun minni til að læra betur á Markov-keðjur. 
+
+Skráin tekur inn textaskrá fyllta af Íslenskum ljóðum, myndar Markov-keðjur útfrá þeim ljóðum, greinir ljóðin örlítið til að 
+auðvelda forritinu að yrkja sæmilega samhangandi ljóð, og mun svo yrkja ljóð eftir beiðni notanda í því formi sem notandi biður um.
+
+Ljóðin byrja á handahófskenndu orði fengnu einhvernstaðar úr gagnagrunninum, og síðan mun Markov klasinn mynda lista af orðum sem honum langar 
+að bæta við ljóðið byggt á hvaða orð eru gildar afleiðingar gefins orðs. Klasinn gefur Poet klasanum þennan lista, sem mun fjarlægja orð sem 
+hann telur ekki henta á þessum stað í ljóðinu, hvort sem það eru orð sem myndu brjóta gegn bragforminu, auka líkur orða sem klasinn telur vera 
+afburða góð, og leggja frekari áherslu á orð sem hann telur vera viðeigandi efni ljóðsins. Allt þetta er gert í tilraun til að yrkja ljóð með 
+sæmilega samhangandi málfar og þema. Það er umdeilanlegt hversu vel það teks, en hann gerir sitt besta. 
+
+Poet klasinn mun síðan skila þessum lista aftur til Markov klasans sem mun af handahófi velja næsta orð ljóðsins frá samþykkta listanum. Hann mun 
+þaðan endurtaka ferlið með valda orðið sem grunn þar til ljóðið er fullort eða hann fær ritstíflu og getur ekki lengur klárað ljóðið þrátt fyrir
+margvíslegar tilraunir. 
+
+Athuga ber að forritið virkar ekki fyrir tungumál með óreglulega hljóðfræði. Íslenska er þannig búin að orð eru borin fram (að mestu leiti) eins og þau eru skrifuð. 
+tungumál eins og t.d enska geta borið orð með svipaða stafsetningu fram á marga mismunandi vegu, og því er ólíklegt að Rafrímur semji ljóð sem myndu ríma, þar sem 
+Rafrímur ákveður hvort tvö orð rími eða ekki byggt á hvort þau séu skrifuð á svipaðan hátt. 
+
+Eftirfarandi skjöl og klasar eru í þessu skjalasafni:
+
+
+### Poet 
+Poet er klasi sem hefur þann tilgang að fylgjast með og stýra Markov keðjunni, beinandi henni í réttar áttir á meðan hún yrkir. 
+Klasinn hefur það verk að gefa skipanir til Markov, geyma stillingarnar sem eru í notkun, framkvæma vilja notanda gegnum skelina, aðstoða Markov að 
+þekkja gild orð frá ógildum, og beina keðjunni í vali á næsta orði ljóðsins.
+
+### Markov 
+
+Markov er raunverulega Makov keðjan. Klasinn er sæmilega hefðbundinn, notandi ýmsa lista og tengikort til að bæði geyma þær orðnotkanir sem 
+hann þekkir, lista af smáorðum sem hann veit eru ekki "alvöru" orð sem innihalda merkingu, og ýmis föll sem mynda orðabókina, greina textann sem 
+er gefinn, og auðvitað yrkja ljóðin sjálf. 
+
+### "Aðal" kóðinn í lok skjals
+
+Einungis mjög smátt forrit ætlað til að taka inn skipanir frá skelinni og hafa samskipti við notanda. 
+Ég líkega mun skapa vefsíðu eða aðra þægilegri leið til að nota forritið síðar.
+
+### Hjálparföll
+
+Nokkur hjálparföll til að einfalda mér lífið. 
+
+## ljod.txt
+Textaskjal með raunverulegum ljóðum sem Rafrímur mun nota til að skapa markov keðjuna, læra "raunverulega" málfræði og orðnotkun,
+og skilja hvaða orð og hugtök birtast oft saman. Öll ljóð eru varin höfundarétti þeirra sem þau yrkja. Ekki öll ljóðin sem birtast í skrá 
+þessi eru í almennri eign.
+
+## stillingar.txt
+
+Stillingar sem nota má til að breyta bragformi ljóðanna sem ort eru. Stillingarnar geta verið
+notaðar til að hafa áhrif á hvaða línur ljóðs ríma, hve mörg atkvæði eru í hverri línu, ef orð mega 
+ríma við sjálf sig, hve mörg atvæði þurfa að stemma til að orð rími ef orð eru nægilega löng, og svo fleiri
+smástillingar til að hafa áhrif á hvernig keðjan vinnur. 
+
+## utljod.txt
+
+Tómt textaskjal ég nota til að skrifa ljóðin í. 
+
+
+
+# RafRimur (En)
 Making Python compose poetry in Icelandic.
 
 RafRímur (Lit. translation "Electro-Rhymes") is a python script I've been working on for a while in my initial
@@ -55,7 +118,7 @@ A text file with real poems that Rafrimur will use to generate the markov data, 
 use to relate similarly themed words together. All poems are copyrighted by their authors or estates, as some poems in there
 are not yet in public domain even if most are. 
 
-## settings.txt
+## stillingar.txt
 
 Settings used to control the form and function of the poems generated. 
 it is possible to affect what lines rhyme, how many syllables are in each rhyme, if words
